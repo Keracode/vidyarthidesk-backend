@@ -10,6 +10,7 @@ type Config struct {
 	JWTSecret  string
 	DBString   string
 	MaxDBConns int
+	PreFork    bool
 }
 
 func getEnv(key string, defaultValue string) string {
@@ -30,11 +31,22 @@ func getEnvInt(key string, defaultValue int) int {
 	return defaultValue
 }
 
+func getEnvBool(key string, defaultValue bool) bool {
+	if value := os.Getenv(key); value != "" {
+		if valueInt, err := strconv.ParseBool(value); err == nil {
+			return valueInt
+		}
+	}
+
+	return defaultValue
+}
+
 func Load() *Config {
 	return &Config{
 		Port:       getEnv("PORT", "3000"),
 		DBString:   getEnv("GOOSE_DBSTRING", ""),
 		JWTSecret:  getEnv("JWT_SECRET", "secret"),
 		MaxDBConns: getEnvInt("MAX_DB_CONNS", 5),
+		PreFork:    getEnvBool("PRE_FORK", true),
 	}
 }

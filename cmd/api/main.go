@@ -58,7 +58,7 @@ func main() {
 	s.RegisterRoutes()
 
 	go gracefulShutDown(s)
-	if err := s.App.Listen(":"+cfg.Port, fiber.ListenConfig{EnablePrefork: true}); err != nil {
+	if err := s.App.Listen(":"+cfg.Port, fiber.ListenConfig{EnablePrefork: cfg.PreFork}); err != nil {
 		log.Fatalf("Server exited with error %v", err)
 	}
 
