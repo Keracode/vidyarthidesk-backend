@@ -45,9 +45,12 @@ func (s *WebServer) Shutdown(ctx context.Context) error {
 
 func (s *WebServer) SetupMiddleware() {
 	s.App.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"*"},
-		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
-		AllowHeaders: []string{"Accept", "Authorization", "Content-Type"},
+		AllowOriginsFunc: func(origin string) bool {
+			return true
+		},
+		AllowCredentials: true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
+		AllowHeaders:     []string{"Accept", "Authorization", "Content-Type"},
 	}))
 
 	s.App.Use(session.New(session.Config{
